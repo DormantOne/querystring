@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digit to Letter Converter</title>
+</head>
+<body>
+    <h1>Digit to Letter Converter</h1>
+    <div id="result"></div>
+    <script>
+        function digitToLetter(digit) {
+            // Adjusting for 0 = A, 1 = B, ..., 9 = J
+            return String.fromCharCode(65 + digit);
+        }
+
+        function parseQuery(queryString) {
+            let query = {};
+            let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+            for (let i = 0; i < pairs.length; i++) {
+                let pair = pairs[i].split('=');
+                query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+            }
+            return query;
+        }
+
+        function convertNumberToLetters(number) {
+            if (number === 0) return 'A'; // Directly return 'A' for 0
+            let letters = '';
+            // Correcting logic to handle numbers properly
+            while (number > 0) {
+                let digit = number % 10; // Get the last digit
+                letters = digitToLetter(digit) + letters; // Prepend the corresponding letter
+                number = Math.floor(number / 10); // Remove the last digit
+            }
+            return letters;
+        }
+
+        window.onload = function () {
+            let query = parseQuery(window.location.search);
+            let number = parseInt(query.number, 10);
+            // Handling NaN case if 'number' query parameter is not a valid number
+            if (isNaN(number)) {
+                document.getElementById('result').innerText = 'Please provide a valid number in the query.';
+            } else {
+                let result = convertNumberToLetters(number);
+                document.getElementById('result').innerText = 'Result: ' + result;
+            }
+        }
+    </script>
+</body>
+</html>
